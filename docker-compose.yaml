@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  bankingservice:
+    container_name: banking-service-api
+    build:
+      context: .
+    ports:
+      - "8086:8086"
