@@ -12,6 +12,7 @@ import za.co.reed.shaun.bankingserviceapi.entity.AccountInformation;
 import za.co.reed.shaun.bankingserviceapi.model.request.AccountDepositRequest;
 import za.co.reed.shaun.bankingserviceapi.model.request.AccountWithdrawalRequest;
 import za.co.reed.shaun.bankingserviceapi.model.request.CurrentAccountRequest;
+import za.co.reed.shaun.bankingserviceapi.model.response.AccountResponse;
 import za.co.reed.shaun.bankingserviceapi.model.response.TransactionResponse;
 import za.co.reed.shaun.bankingserviceapi.repository.AccountInformationRepository;
 import za.co.reed.shaun.bankingserviceapi.repository.TransactionHistoryRepository;
@@ -76,7 +77,7 @@ class CurrentAccountServiceImplTest {
                 .thenReturn(testCurrentAccount);
 
         //Then
-        AccountInformation testAccountInformationResponse = testCurrentAccountService
+        AccountResponse testAccountInformationResponse = testCurrentAccountService
                 .openCurrentAccount(testRequest);
 
         assertNotNull(testAccountInformationResponse);

@@ -5,7 +5,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import za.co.reed.shaun.bankingserviceapi.entity.AccountInformation;
 import za.co.reed.shaun.bankingserviceapi.model.request.AccountDepositRequest;
 import za.co.reed.shaun.bankingserviceapi.model.request.AccountWithdrawalRequest;
 import za.co.reed.shaun.bankingserviceapi.model.request.SavingsAccountRequest;

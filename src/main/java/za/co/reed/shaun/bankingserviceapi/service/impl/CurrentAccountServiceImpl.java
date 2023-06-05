@@ -72,7 +72,8 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
                 account.setUpdatedAt(new Date());
             }
         } else {
-            Double overdraft = BigDecimal.ZERO.subtract(BigDecimal.valueOf(request.withdrawalAmount())).doubleValue();
+            Double overdraft = BigDecimal.valueOf(account.getOverdraftBalance())
+                    .subtract(BigDecimal.valueOf(request.withdrawalAmount())).doubleValue();
             account = updateAccountInformationForOverdraft(account, overdraft);
         }
 
