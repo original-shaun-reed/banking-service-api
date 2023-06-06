@@ -1,6 +1,6 @@
 # banking-service-api
 
-IntelliJ was used while developing this maven project, using Spring/Spring Boot 3.x and Java 17
+IntelliJ was used while developing this maven project, using Spring/Spring Boot 3.x and Java 17 and H2 DB
 
 When cloning this project and opening in the IDE, please make sure that the maven dependencies are imported, when that is done you may run the project
 ***
@@ -10,7 +10,7 @@ When cloning this project and opening in the IDE, please make sure that the mave
 When running this project the default host will be  **http://localhost:8087** 
 
 *When the project is in runtime;*
-<br />There are six end points (APIs) that has their unique request and response bodies with a ***Content-Type: application/json*** header when making use of these APIs as well as more than **20 Unit tests with 100% coverage on services**
+<br />There are 7 (3 for savings account/3 for current account/1 for tranfer) end points that exists in this API that has their unique request and response bodies with a ***Content-Type: application/json*** header when making use of these APIs as well as more than **40 Unit tests with 100% coverage on services**
 ***
 ***
 
@@ -103,3 +103,24 @@ Response body:
     "accountBalance": 1000.0
 }**
 ***
+
+### *Example transfer from a Current Account to a Savings Account:*
+
+POST
+<br />**http://localhost:8087/api/savings/v1/withdrawal**
+
+Request body:
+<br />**{
+    "fromAccountNumber": 1234567898,
+    "toAccountNumber": 1234567890,
+    "transferAmount": 46000
+}**
+
+Response body:
+<br />**{
+    "message": "Transfer from 1234567898 to 1234567890 with the amount of R46000.0 was successful"
+}**
+***
+
+### Note: I've also added a docker file as well as compose configuration to mimic an actual live/external environment when deployed
+<br />**To run this api in a docker container, simply access the the project directory though cmd/terminal and type out "docker-compose up --build" (Just make sure that you have docker installed on your machine)**
