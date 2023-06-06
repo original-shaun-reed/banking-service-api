@@ -18,20 +18,29 @@ public class TransactionHistory {
     @Column(updatable = false, nullable = false, unique = true)
     private Long transactionID;
     private String accountType;
-    private Integer accountNumber;
+    private Integer fromAccountNumber;
+    private Integer toAccountNumber;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
-    private Double previousAmount;
-    private Double updatedAmount;
+    private Double previousAccountBalance;
+    private Double updatedAccountBalance;
+
+    private Double previousOverdraftBalance;
+    private Double updatedOverdraftBalance;
+
     private String transactionType;
 
-    public TransactionHistory(String accountType, Integer accountNumber, Double previousAmount,
-                              Double updatedAmount, String transactionType) {
+    public TransactionHistory(String accountType, Integer fromAccountNumber, Integer toAccountNumber,
+                              Double previousAccountBalance, Double updatedAccountBalance,
+                              Double previousOverdraftBalance, Double updatedOverdraftBalance, String transactionType) {
         this.accountType = accountType;
-        this.accountNumber = accountNumber;
+        this.fromAccountNumber = fromAccountNumber;
+        this.toAccountNumber = toAccountNumber;
         this.createdAt = new Date();
-        this.previousAmount = previousAmount;
-        this.updatedAmount = updatedAmount;
+        this.previousAccountBalance = previousAccountBalance;
+        this.updatedAccountBalance = updatedAccountBalance;
+        this.previousOverdraftBalance = previousOverdraftBalance;
+        this.updatedOverdraftBalance = updatedOverdraftBalance;
         this.transactionType = transactionType;
     }
 }

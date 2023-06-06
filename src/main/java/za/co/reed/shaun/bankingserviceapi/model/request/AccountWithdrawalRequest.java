@@ -12,6 +12,6 @@ public record AccountWithdrawalRequest(
 
         @NotNull(message = BankServiceConstants.validateAmountMsg)
         @Positive(message = BankServiceConstants.validateAmountNegativeMsg)
-        @Min(value = 1, message = "Withdrawal amount can't be 0")
+        @Min(value = 100, message = BankServiceConstants.validateMinimumAmountMsg + 100)
         Double withdrawalAmount
 ) {}

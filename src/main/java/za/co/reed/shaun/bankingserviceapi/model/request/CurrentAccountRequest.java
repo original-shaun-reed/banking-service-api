@@ -4,8 +4,6 @@ import jakarta.validation.constraints.*;
 import za.co.reed.shaun.bankingserviceapi.utils.AccountType;
 import za.co.reed.shaun.bankingserviceapi.utils.BankServiceConstants;
 
-import java.io.Serializable;
-
 public record CurrentAccountRequest(
     @NotNull(message = BankServiceConstants.validateAccountHolderNameMsg)
     @NotEmpty(message = BankServiceConstants.validateAccountHolderNameMsg)
@@ -26,4 +24,4 @@ public record CurrentAccountRequest(
 
     @Positive(message = BankServiceConstants.validateAmountNegativeMsg)
     Double amountToDeposit
-) implements Serializable {}
+) {}

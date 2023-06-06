@@ -18,4 +18,10 @@ public class BankingServiceException {
             super(errorMessage);
         }
     }
+
+    public static class AccountTypeNotFoundException extends RuntimeException {
+        public AccountTypeNotFoundException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
 }

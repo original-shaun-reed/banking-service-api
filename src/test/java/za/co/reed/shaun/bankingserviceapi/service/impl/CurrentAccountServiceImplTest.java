@@ -8,14 +8,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import za.co.reed.shaun.bankingserviceapi.entity.AccountInformation;
+import za.co.reed.shaun.bankingserviceapi.entity.Account;
 import za.co.reed.shaun.bankingserviceapi.model.request.AccountDepositRequest;
 import za.co.reed.shaun.bankingserviceapi.model.request.AccountWithdrawalRequest;
 import za.co.reed.shaun.bankingserviceapi.model.request.CurrentAccountRequest;
 import za.co.reed.shaun.bankingserviceapi.model.response.AccountResponse;
 import za.co.reed.shaun.bankingserviceapi.model.response.TransactionResponse;
-import za.co.reed.shaun.bankingserviceapi.repository.AccountInformationRepository;
+import za.co.reed.shaun.bankingserviceapi.repository.AccountRepository;
 import za.co.reed.shaun.bankingserviceapi.repository.TransactionHistoryRepository;
+import za.co.reed.shaun.bankingserviceapi.service.AccountService;
 import za.co.reed.shaun.bankingserviceapi.utils.AccountType;
 import za.co.reed.shaun.bankingserviceapi.utils.exceptions.BankingServiceException;
 
@@ -29,10 +30,11 @@ import static org.mockito.Mockito.*;
 @MockitoSettings(strictness = Strictness.STRICT_STUBS)
 class CurrentAccountServiceImplTest {
     @Mock
-    private AccountInformationRepository testAccountInformationRepository;
-
+    private AccountRepository testAccountRepository;
     @Mock
     private TransactionHistoryRepository transactionHistoryRepository;
+    @Mock
+    private AccountService testAccountService;
 
     @InjectMocks
     private CurrentAccountServiceImpl testCurrentAccountService;
@@ -40,8 +42,8 @@ class CurrentAccountServiceImplTest {
     @BeforeEach
     void setUp() {
         initMocks(this);
-        testCurrentAccountService = new CurrentAccountServiceImpl(testAccountInformationRepository,
-                transactionHistoryRepository);
+        testCurrentAccountService = new CurrentAccountServiceImpl(testAccountRepository,
+                transactionHistoryRepository, testAccountService);
     }
 
     @Test
@@ -49,12 +51,12 @@ class CurrentAccountServiceImplTest {
         //Given
         CurrentAccountRequest testRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 0.0);
-        AccountInformation testCurrentAccount = new AccountInformation(testRequest);
+        Account testCurrentAccount = new Account(testRequest);
 
 
         //When
-        when(testAccountInformationRepository.getAccountInformationByAccountNumber(testRequest.accountNumber()))
-                .thenReturn(testCurrentAccount);
+        when(testAccountService.openCurrentAccount(any(CurrentAccountRequest.class)))
+                .thenThrow(BankingServiceException.AccountExistsException.class);
 
         //Then
         assertThrows(BankingServiceException.AccountExistsException.class, () -> {
@@ -67,13 +69,10 @@ class CurrentAccountServiceImplTest {
         //Given
         CurrentAccountRequest testRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 0.0);
-        AccountInformation testCurrentAccount = new AccountInformation(testRequest);
+        Account testCurrentAccount = new Account(testRequest);
 
         //When
-        when(testAccountInformationRepository.getAccountInformationByAccountNumber(anyInt()))
-                .thenReturn(null);
-
-        when(testAccountInformationRepository.save(any(AccountInformation.class)))
+        when(testAccountService.openCurrentAccount(any(CurrentAccountRequest.class)))
                 .thenReturn(testCurrentAccount);
 
         //Then
@@ -89,7 +88,7 @@ class CurrentAccountServiceImplTest {
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 2000.00);
 
         //When
-        when(testAccountInformationRepository.getAccountInformationByAccountNumber(anyInt()))
+        when(testAccountRepository.getAccountInformationByAccountNumber(anyInt()))
                 .thenReturn(null);
 
         //Then
@@ -103,11 +102,11 @@ class CurrentAccountServiceImplTest {
         //Given
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 2000.00);
 
-        AccountInformation testAccountInformation = new AccountInformation(new CurrentAccountRequest("TEST",
+        Account testAccountInformation = new Account(new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.SAVINGS, 0.0));
 
         //When
-        when(testAccountInformationRepository.getAccountInformationByAccountNumber(anyInt()))
+        when(testAccountRepository.getAccountInformationByAccountNumber(anyInt()))
                 .thenReturn(testAccountInformation);
 
         //Then
@@ -122,13 +121,13 @@ class CurrentAccountServiceImplTest {
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 5000.00);
         CurrentAccountRequest testCurrentAccountRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 5000.00);
-        AccountInformation testCurrentAccount = new AccountInformation(testCurrentAccountRequest);
+        Account testCurrentAccount = new Account(testCurrentAccountRequest);
 
         //When
-        when(testAccountInformationRepository.getAccountInformationByAccountNumber(anyInt()))
+        when(testAccountRepository.getAccountInformationByAccountNumber(anyInt()))
                 .thenReturn(testCurrentAccount);
 
-        when(testAccountInformationRepository.save(any(AccountInformation.class)))
+        when(testAccountService.withdrawFromCurrentAccount(any(Account.class), anyDouble()))
                 .thenReturn(testCurrentAccount);
 
         //Then
@@ -144,20 +143,25 @@ class CurrentAccountServiceImplTest {
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 7000.00);
         CurrentAccountRequest testCurrentAccountRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 5000.00);
-        AccountInformation testCurrentAccount = new AccountInformation(testCurrentAccountRequest);
+        Account testCurrentAccount = new Account(testCurrentAccountRequest);
+
+        Account expectedCurrentAccount = new Account(new CurrentAccountRequest("TEST",
+                "TEST", 1234567890, AccountType.CURRENT, 0.0));
+        expectedCurrentAccount.setOverdraftBalance(-2000.00);
+
 
         //When
-        when(testAccountInformationRepository.getAccountInformationByAccountNumber(anyInt()))
+        when(testAccountRepository.getAccountInformationByAccountNumber(anyInt()))
                 .thenReturn(testCurrentAccount);
 
-        when(testAccountInformationRepository.save(any(AccountInformation.class)))
-                .thenReturn(testCurrentAccount);
+        when(testAccountService.withdrawFromCurrentAccount(any(Account.class), anyDouble()))
+                .thenReturn(expectedCurrentAccount);
 
         //Then
         TransactionResponse testTransactionResponse = testCurrentAccountService
                 .withdrawalFromCurrentAccount(testRequest);
 
-        assertTrue((BigDecimal.ZERO.doubleValue() > testTransactionResponse.overDraftBalance()));
+        assertTrue((BigDecimal.ZERO.doubleValue() > testTransactionResponse.overdraftBalance()));
     }
 
     @Test
@@ -166,11 +170,13 @@ class CurrentAccountServiceImplTest {
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 105000.00);
         CurrentAccountRequest testCurrentAccountRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 0.00);
-        AccountInformation testCurrentAccount = new AccountInformation(testCurrentAccountRequest);
+        Account testCurrentAccount = new Account(testCurrentAccountRequest);
 
         //When
-        when(testAccountInformationRepository.getAccountInformationByAccountNumber(anyInt()))
-                .thenReturn(testCurrentAccount);
+        when(testAccountRepository.getAccountInformationByAccountNumber(anyInt())).thenReturn(testCurrentAccount);
+
+        when(testAccountService.withdrawFromCurrentAccount(any(Account.class), anyDouble()))
+                .thenThrow(BankingServiceException.AccountTransactionException.class);
 
         //Then
         assertThrows(BankingServiceException.AccountTransactionException.class, () -> {
@@ -182,22 +188,28 @@ class CurrentAccountServiceImplTest {
     void testWithdrawalFromCurrentAccountWithSuccessfulResponseWithOverdraftResponseWithNoAccountBalance() {
         //Given
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 7000.00);
-        CurrentAccountRequest testCurrentAccountRequest = new CurrentAccountRequest("TEST",
-                "TEST", 1234567890, AccountType.CURRENT, 0.0);
-        AccountInformation testCurrentAccount = new AccountInformation(testCurrentAccountRequest);
+
+        Account testCurrentAccount = new Account(new CurrentAccountRequest("TEST",
+                "TEST", 1234567890, AccountType.CURRENT, 0.0));
+
+
+        Account expectedCurrentAccount = new Account(new CurrentAccountRequest("TEST",
+                "TEST", 1234567890, AccountType.CURRENT, 0.0));
+        expectedCurrentAccount.setOverdraftBalance(-5000.00);
+
 
         //When
-        when(testAccountInformationRepository.getAccountInformationByAccountNumber(anyInt()))
+        when(testAccountRepository.getAccountInformationByAccountNumber(anyInt()))
                 .thenReturn(testCurrentAccount);
 
-        when(testAccountInformationRepository.save(any(AccountInformation.class)))
-                .thenReturn(testCurrentAccount);
+        when(testAccountService.withdrawFromCurrentAccount(any(Account.class), anyDouble()))
+                .thenReturn(expectedCurrentAccount);
 
         //Then
         TransactionResponse testTransactionResponse = testCurrentAccountService
                 .withdrawalFromCurrentAccount(testRequest);
 
-        assertTrue((BigDecimal.ZERO.doubleValue() > testTransactionResponse.overDraftBalance()));
+        assertTrue((BigDecimal.ZERO.doubleValue() > testTransactionResponse.overdraftBalance()));
     }
 
     @Test
@@ -206,10 +218,10 @@ class CurrentAccountServiceImplTest {
         AccountDepositRequest testAccountDepositRequest = new AccountDepositRequest(1234567890, 7000.00);
         CurrentAccountRequest testCurrentAccountRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.SAVINGS, 5000.00);
-        AccountInformation testCurrentAccount = new AccountInformation(testCurrentAccountRequest);
+        Account testCurrentAccount = new Account(testCurrentAccountRequest);
 
         //When
-        when(testAccountInformationRepository.getAccountInformationByAccountNumber(anyInt()))
+        when(testAccountRepository.getAccountInformationByAccountNumber(anyInt()))
                 .thenReturn(testCurrentAccount);
 
         //Then
@@ -224,7 +236,7 @@ class CurrentAccountServiceImplTest {
         AccountDepositRequest testAccountDepositRequest = new AccountDepositRequest(1234567890, 7000.00);
 
         //When
-        when(testAccountInformationRepository.getAccountInformationByAccountNumber(anyInt()))
+        when(testAccountRepository.getAccountInformationByAccountNumber(anyInt()))
                 .thenReturn(null);
 
         //Then
@@ -236,16 +248,23 @@ class CurrentAccountServiceImplTest {
     @Test
     void depositIntoCurrentAccountWithSuccessfulDepositIntoCurrentAccount() {
         //Given
-        Double expectedResult = 12000.00;
+        Double expectedResult = 2000.00;
 
         AccountDepositRequest testAccountDepositRequest = new AccountDepositRequest(1234567890, 7000.00);
-        CurrentAccountRequest testCurrentAccountRequest = new CurrentAccountRequest("TEST",
-                "TEST", 1234567890, AccountType.CURRENT, 5000.00);
-        AccountInformation testCurrentAccount = new AccountInformation(testCurrentAccountRequest);
+
+        Account testCurrentAccount = new Account(new CurrentAccountRequest("TEST",
+                "TEST", 1234567890, AccountType.CURRENT, 0.0));
+        testCurrentAccount.setOverdraftBalance(-5000.00);
+
+        Account expectedCurrentAccount = new Account(new CurrentAccountRequest("TEST",
+                "TEST", 1234567890, AccountType.CURRENT, 2000.00));
 
         //When
-        when(testAccountInformationRepository.getAccountInformationByAccountNumber(anyInt()))
+        when(testAccountRepository.getAccountInformationByAccountNumber(anyInt()))
                 .thenReturn(testCurrentAccount);
+
+        when(testAccountService.depositIntoAccount(any(Account.class), anyDouble()))
+                .thenReturn(expectedCurrentAccount);
 
         TransactionResponse testTransactionResponse = testCurrentAccountService.depositToCurrentAccount(testAccountDepositRequest);
 
@@ -254,6 +273,30 @@ class CurrentAccountServiceImplTest {
     }
 
     @Test
-    void depositToCurrentAccount() {
+    void depositIntoCurrentAccountWithSuccessfulDepositIntoCurrentAccountOverdraft() {
+        //Given
+        Double expectedResult = -2000.00;
+
+        AccountDepositRequest testAccountDepositRequest = new AccountDepositRequest(1234567890, 7000.00);
+        CurrentAccountRequest testCurrentAccountRequest = new CurrentAccountRequest("TEST",
+                "TEST", 1234567890, AccountType.CURRENT, 0.0);
+        Account testCurrentAccount = new Account(testCurrentAccountRequest);
+        testCurrentAccount.setOverdraftBalance(-9000.00);
+
+        Account expectedCurrentAccount = new Account(new CurrentAccountRequest("TEST",
+                "TEST", 1234567890, AccountType.CURRENT, 0.0));
+        expectedCurrentAccount.setOverdraftBalance(-2000.00);
+
+        //When
+        when(testAccountRepository.getAccountInformationByAccountNumber(anyInt()))
+                .thenReturn(testCurrentAccount);
+
+        when(testAccountService.depositIntoAccount(any(Account.class), anyDouble()))
+                .thenReturn(expectedCurrentAccount);
+
+        TransactionResponse testTransactionResponse = testCurrentAccountService.depositToCurrentAccount(testAccountDepositRequest);
+
+        //Then
+        assertEquals(expectedResult, testTransactionResponse.overdraftBalance());
     }
 }

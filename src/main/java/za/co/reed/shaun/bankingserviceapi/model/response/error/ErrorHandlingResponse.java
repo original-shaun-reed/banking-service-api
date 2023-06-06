@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorHandlingResponse {
-    String exception;
     String message;
     String path;
 }

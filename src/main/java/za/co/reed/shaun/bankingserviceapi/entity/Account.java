@@ -17,7 +17,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @Entity
-public class AccountInformation {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false, unique = true)
@@ -47,20 +47,20 @@ public class AccountInformation {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    public AccountInformation(SavingsAccountRequest request) {
+    public Account(SavingsAccountRequest request) {
         this.accountHolderName = request.accountHolderName();
         this.accountHolderSurname = request.accountHolderSurname();
         this.accountNumber = request.accountNumber();
-        this.accountType = request.accountType().name();
+        this.accountType = !Objects.isNull(request.accountType()) ? request.accountType().name() : null;
         this.accountBalance = request.amountToDeposit();
         this.createdAt = new Date();
     }
 
-    public AccountInformation(CurrentAccountRequest request) {
+    public Account(CurrentAccountRequest request) {
         this.accountHolderName = request.accountHolderName();
         this.accountHolderSurname = request.accountHolderSurname();
         this.accountNumber = request.accountNumber();
-        this.accountType = request.accountType().name();
+        this.accountType = !Objects.isNull(request.accountType()) ? request.accountType().name() : null;
         this.accountBalance = !Objects.isNull(request.amountToDeposit()) ? request.amountToDeposit() : BigDecimal.ZERO.doubleValue();
         this.overdraftBalance = BigDecimal.ZERO.doubleValue();
         this.createdAt = new Date();

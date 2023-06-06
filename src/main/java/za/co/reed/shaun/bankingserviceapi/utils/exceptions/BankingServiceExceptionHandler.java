@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -79,5 +80,17 @@ public class BankingServiceExceptionHandler {
         errorHandlingResponse.setPath(request.getRequestURI());
 
         return ResponseEntity.badRequest().body(errorHandlingResponse);
+    }
+
+    @ExceptionHandler(BankingServiceException.AccountTypeNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ResponseEntity<ErrorHandlingResponse> handleAccountTypeNotFoundException(BankingServiceException.AccountTypeNotFoundException ex,
+                                                                                   HttpServletRequest request) {
+        ErrorHandlingResponse errorHandlingResponse = new ErrorHandlingResponse();
+        errorHandlingResponse.setMessage(ex.getMessage());
+        errorHandlingResponse.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorHandlingResponse);
     }
 }

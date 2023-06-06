@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import za.co.reed.shaun.bankingserviceapi.utils.BankServiceConstants;
 
-import java.io.Serializable;
-
 public record AccountDepositRequest (
         @NotNull(message = BankServiceConstants.validateAccountNumberMsg)
         @Positive(message = BankServiceConstants.validateAccountNumberNegativeMsg)
@@ -14,6 +12,6 @@ public record AccountDepositRequest (
 
         @NotNull(message = BankServiceConstants.validateAmountMsg)
         @Positive(message = BankServiceConstants.validateAmountNegativeMsg)
-        @Min(value = 1, message = "Deposit amount can't be 0")
+        @Min(value = 100, message = BankServiceConstants.validateMinimumAmountMsg + 100)
         Double depositAmount
-) implements Serializable {}
+) {}
