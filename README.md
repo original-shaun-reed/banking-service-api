@@ -8,8 +8,14 @@ When cloning this project and opening in the IDE, please make sure that the mave
 ***
 
 When running this project the default host will be  **http://localhost:8087** 
+A database will be created on successful startup with two Tables called **Account** as well as **TransactionHistory**
 
-*When the project is in runtime;*
+### To access the H2DB
+Run **http://localhost:8086/h2-console** in your browser (The login information is default, meaning that username = sa and password is empty)
+Once logged in, you can query from the TABLES
+
+
+### *When the project is in runtime;*
 <br />There are 7 (3 for savings account/3 for current account/1 for tranfer) end points that exists in this API that has their unique request and response bodies with a ***Content-Type: application/json*** header when making use of these APIs as well as more than **40 Unit tests with 100% coverage on services**
 ***
 ***
