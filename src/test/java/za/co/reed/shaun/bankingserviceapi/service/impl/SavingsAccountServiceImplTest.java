@@ -50,7 +50,7 @@ class SavingsAccountServiceImplTest {
     * */
 
     @Test
-    void openSavingsAccountWithSuccessfulFailureDueToAccountAlreadyExisting() {
+    void testOpenSavingsAccountWithSuccessfulFailureDueToAccountAlreadyExisting() {
         //Given
         SavingsAccountRequest testRequest = new SavingsAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.SAVINGS, 0.0);
@@ -89,7 +89,7 @@ class SavingsAccountServiceImplTest {
      * */
 
     @Test
-    void withdrawalFromSavingsAccountWithSuccessfulFailureDueToAccountNotFound() {
+    void testWithdrawalFromSavingsAccountWithSuccessfulFailureDueToAccountNotFound() {
         //Given
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 2000.00);
 
@@ -104,7 +104,7 @@ class SavingsAccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromSavingsAccountWithSuccessfulFailureDueToIncorrectAccountType() {
+    void testWithdrawalFromSavingsAccountWithSuccessfulFailureDueToIncorrectAccountType() {
         //Given
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 2000.00);
 
@@ -122,7 +122,7 @@ class SavingsAccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromSavingsAccountWithSuccessfulFailureDueToAccountBalanceTooLow() {
+    void testWithdrawalFromSavingsAccountWithSuccessfulFailureDueToAccountBalanceTooLow() {
         //Given
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 1000.00);
 
@@ -140,7 +140,7 @@ class SavingsAccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromSavingsAccountWithSuccessfulFailureDueToAccountBalanceExceedingTheLimit() {
+    void testWithdrawalFromSavingsAccountWithSuccessfulFailureDueToAccountBalanceExceedingTheLimit() {
         //Given
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 2000.00);
 
@@ -158,7 +158,7 @@ class SavingsAccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromSavingsAccountWithSuccessfulFailureDueToWithdrawalAmountHigherThanTheAccountBalance() {
+    void testWithdrawalFromSavingsAccountWithSuccessfulFailureDueToWithdrawalAmountHigherThanTheAccountBalance() {
         //Given
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 3000.00);
 
@@ -204,7 +204,7 @@ class SavingsAccountServiceImplTest {
     }
 
     @Test
-    void depositIntoSavingsAccountWithSuccessfulFailureDueToExceptionBecauseOfNoAccountInformation() {
+    void testDepositIntoSavingsAccountWithSuccessfulFailureDueToExceptionBecauseOfNoAccountInformation() {
         //Given
         AccountDepositRequest testAccountDepositRequest = new AccountDepositRequest(1234567890, 7000.00);
 
@@ -219,7 +219,7 @@ class SavingsAccountServiceImplTest {
     }
 
     @Test
-    void depositIntoSavingsAccountWithSuccessfulDepositIntoCurrentAccount() {
+    void testDepositIntoSavingsAccountWithSuccessfulDepositIntoCurrentAccount() {
         //Given
         Double expectedResult = 12000.00;
 

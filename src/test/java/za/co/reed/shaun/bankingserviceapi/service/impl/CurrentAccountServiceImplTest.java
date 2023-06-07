@@ -47,11 +47,10 @@ class CurrentAccountServiceImplTest {
     }
 
     @Test
-    void openCurrentAccountWithSuccessfulFailureDueToAccountAlreadyExisting() {
+    void testOpenCurrentAccountWithSuccessfulFailureDueToAccountAlreadyExisting() {
         //Given
         CurrentAccountRequest testRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 0.0);
-        Account testCurrentAccount = new Account(testRequest);
 
 
         //When
@@ -83,7 +82,7 @@ class CurrentAccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromCurrentAccountWithSuccessfulFailureDueToAccountNotFound() {
+    void testWithdrawalFromCurrentAccountWithSuccessfulFailureDueToAccountNotFound() {
         //Given
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 2000.00);
 
@@ -98,7 +97,7 @@ class CurrentAccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromCurrentAccountWithSuccessfulFailureDueToIncorrectAccountType() {
+    void testWithdrawalFromCurrentAccountWithSuccessfulFailureDueToIncorrectAccountType() {
         //Given
         AccountWithdrawalRequest testRequest = new AccountWithdrawalRequest(1234567890, 2000.00);
 
@@ -213,7 +212,7 @@ class CurrentAccountServiceImplTest {
     }
 
     @Test
-    void depositIntoCurrentAccountWithSuccessfulFailureDueToExceptionAndIncorrectAccountType() {
+    void testDepositIntoCurrentAccountWithSuccessfulFailureDueToExceptionAndIncorrectAccountType() {
         //Given
         AccountDepositRequest testAccountDepositRequest = new AccountDepositRequest(1234567890, 7000.00);
         CurrentAccountRequest testCurrentAccountRequest = new CurrentAccountRequest("TEST",
@@ -231,7 +230,7 @@ class CurrentAccountServiceImplTest {
     }
 
     @Test
-    void depositIntoCurrentAccountWithSuccessfulFailureDueToException() {
+    void testDepositIntoCurrentAccountWithSuccessfulFailureDueToException() {
         //Given
         AccountDepositRequest testAccountDepositRequest = new AccountDepositRequest(1234567890, 7000.00);
 
@@ -246,7 +245,7 @@ class CurrentAccountServiceImplTest {
     }
 
     @Test
-    void depositIntoCurrentAccountWithSuccessfulDepositIntoCurrentAccount() {
+    void testDepositIntoCurrentAccountWithSuccessfulDepositIntoCurrentAccount() {
         //Given
         Double expectedResult = 2000.00;
 
@@ -273,7 +272,7 @@ class CurrentAccountServiceImplTest {
     }
 
     @Test
-    void depositIntoCurrentAccountWithSuccessfulDepositIntoCurrentAccountOverdraft() {
+    void testDepositIntoCurrentAccountWithSuccessfulDepositIntoCurrentAccountOverdraft() {
         //Given
         Double expectedResult = -2000.00;
 

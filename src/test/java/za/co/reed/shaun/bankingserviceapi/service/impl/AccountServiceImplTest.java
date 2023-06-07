@@ -72,7 +72,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void openCurrentAccountWithSuccessfulFailureDueToAccountTypeBeingIncorrectOrNull() {
+    void testOpenCurrentAccountWithSuccessfulFailureDueToAccountTypeBeingIncorrectOrNull() {
         //Given
         CurrentAccountRequest testRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, null, null);
@@ -84,7 +84,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void openSavingsAccountWithSuccessfulSaveToDB() {
+    void testOpenSavingsAccountWithSuccessfulSaveToDB() {
         //Given
         SavingsAccountRequest testRequest = new SavingsAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 0.0);
@@ -104,7 +104,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void depositIntoCurrentAccountWithSuccessfulAmendmentToAccountBalance() {
+    void testDepositIntoCurrentAccountWithSuccessfulAmendmentToAccountBalance() {
         //Given
         CurrentAccountRequest testRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 1000.00);
@@ -119,7 +119,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void depositIntoSavingsAccountWithSuccessfulAmendmentToAccountBalance() {
+    void testDepositIntoSavingsAccountWithSuccessfulAmendmentToAccountBalance() {
         //Given
         SavingsAccountRequest testRequest = new SavingsAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.SAVINGS, 1000.00);
@@ -133,7 +133,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromCurrentAccountWithSuccessfulAmendmentToAccountBalance() {
+    void testWithdrawalFromCurrentAccountWithSuccessfulAmendmentToAccountBalance() {
         //Given
         CurrentAccountRequest testRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 5000.00);
@@ -148,7 +148,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromCurrentAccountWithSuccessfulAmendmentToAccountBalanceAndOverdraftBalance() {
+    void testWithdrawalFromCurrentAccountWithSuccessfulAmendmentToAccountBalanceAndOverdraftBalance() {
         //Given
         CurrentAccountRequest testRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 5000.00);
@@ -164,7 +164,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromCurrentAccountWithSuccessfulAddingToOverdraftBalance() {
+    void testWithdrawalFromCurrentAccountWithSuccessfulAddingToOverdraftBalance() {
         //Given
         CurrentAccountRequest testRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 5000.00);
@@ -180,7 +180,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromCurrentAccountWithSuccessfulAddingToOverdraftBalanceWhileItsZero() {
+    void testWithdrawalFromCurrentAccountWithSuccessfulAddingToOverdraftBalanceWhileItsZero() {
         //Given
         CurrentAccountRequest testRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 00.00);
@@ -196,7 +196,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromCurrentAccountWithSuccessfulFailureByExceedingOverdraftAmount() {
+    void testWithdrawalFromCurrentAccountWithSuccessfulFailureByExceedingOverdraftAmount() {
         //Given
         CurrentAccountRequest testRequest = new CurrentAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.CURRENT, 00.00);
@@ -209,7 +209,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromSavingsAccountSuccessfulFailureDueToAccountBalanceBeingLessThanWithdrawalAmount() {
+    void testWithdrawalFromSavingsAccountSuccessfulFailureDueToAccountBalanceBeingLessThanWithdrawalAmount() {
        //Given
         Account testAccount = new Account(new SavingsAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.SAVINGS, 1000.00));
@@ -220,7 +220,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromSavingsAccountSuccessfulFailureDueToAccountBeingBelowTheMinimumAmount() {
+    void testWithdrawalFromSavingsAccountSuccessfulFailureDueToAccountBeingBelowTheMinimumAmount() {
         //Given
         Account testAccount = new Account(new SavingsAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.SAVINGS, 1000.00));
@@ -231,7 +231,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromSavingsAccountSuccessfulFailureDueToAccountBalanceWillBeBelowMinimumAfterWithdrawal() {
+    void testWithdrawalFromSavingsAccountSuccessfulFailureDueToAccountBalanceWillBeBelowMinimumAfterWithdrawal() {
         //Given
         Account testAccount = new Account(new SavingsAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.SAVINGS, 9000.00));
@@ -242,7 +242,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void withdrawalFromSavingsAccountSuccessfullyMeetingAllTheRequirements() {
+    void testWithdrawalFromSavingsAccountSuccessfullyMeetingAllTheRequirements() {
         //Given
         Account testAccount = new Account(new SavingsAccountRequest("TEST",
                 "TEST", 1234567890, AccountType.SAVINGS, 10000.00));
