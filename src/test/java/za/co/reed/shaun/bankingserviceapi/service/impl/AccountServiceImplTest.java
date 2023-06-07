@@ -254,16 +254,4 @@ class AccountServiceImplTest {
         //Then
         assertEquals(2000.00, testAccountResponse.getAccountBalance());
     }
-
-    @Test
-    void withdrawFromCurrentAccount() {
-    }
-
-    @Test
-    void withdrawFromSavingsAccount() {
-    }
-
-    @Test
-    void depositIntoOverdraftOnCurrentAccount() {
-    }
 }
