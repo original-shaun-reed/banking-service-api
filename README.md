@@ -38,14 +38,15 @@ Request body:
 <br />
 
 Response body:
-<br />**{
+```JSON
+{
     "accountHolderName": "TEST",
     "accountHolderSurname": "TEST",
     "accountNumber": 1234567890,
     "accountType": "SAVINGS",
     "accountBalance": 2000.0
-}**
-***
+}
+```
 
 ### *Example deposit to an account (Savings Account):*
 
@@ -53,19 +54,22 @@ POST
 <br />**http://localhost:8087/api/savings/v1/deposit**
 
 Request body:
-<br />**{
+```JSON
+{
     "accountNumber": 1234567890,
     "depositAmount": 2000
-}**
+}
+```
 
 Response body:
-<br />**{
+```JSON
+{
     "accountNumber": 1234567890,
     "accountType": "SAVINGS",
     "previousAccountBalance": 9000.0,
     "accountBalance": 11000.0
-}**
-***
+}
+```
 
 ### *Example deposit to an account (Savings Account) with mandatory fields missing (Response with validation), handled by the rest controller advice:*
 
