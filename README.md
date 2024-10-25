@@ -26,13 +26,16 @@ POST
 <br />**http://localhost:8087/api/savings/v1/open**
 
 Request body:
-<br />**{
+```JSON
+{
     "accountHolderName": "TEST",
     "accountHolderSurname": "TEST",
     "accountType": "SAVINGS",
     "accountNumber": 1234567890,
     "amountToDeposit": 2000
-}**
+}
+```
+<br />
 
 Response body:
 <br />**{
